@@ -1,0 +1,54 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+group = 'de.martinreinhardt'
+description = 'Sample Serenity project'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+buildscript {
+    ext {
+        gradleVersion = '2.10'
+        javaxmailVersion = '1.5.5'
+        ewsjavaVersion = '2.0'
+        slf4jVersion = '1.7.21'
+        junitVersion = '4.12'
+        assertjVersion = '1.7.0'
+        serenityVersion = '1.1.37-rc.6'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:${serenityVersion}")
+    }
+}
+
+dependencies {
+    compile "org.slf4j:slf4j-simple:${slf4jVersion}"
+    compile "net.serenity-bdd:serenity-core:${serenityVersion}"
+    compile "net.serenity-bdd:serenity-junit:${serenityVersion}"
+
+    testCompile "junit:junit:${junitVersion}"
+    testCompile "org.assertj:assertj-core:${assertjVersion}"
+}
+
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+    systemProperties(System.getProperties())
+    maxParallelForks = 8
+    ignoreFailures true
+}
+
+// continue build to generate reports
+gradle.startParameter.continueOnFailure = true
